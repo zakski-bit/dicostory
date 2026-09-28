@@ -92,7 +92,7 @@ src/
 ### Langkah Instalasi
 1. Clone repositori ini:
    ```bash
-   git clone https://github.com/<username-anda>/dicostory.git
+   git clone https://github.com/zakski-bit/dicostory.git
    cd dicostory
    ```
 2. Pasang dependensi:
