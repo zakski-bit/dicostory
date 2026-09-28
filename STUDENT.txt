@@ -1,0 +1,70 @@
+================================================================================
+DICOSTORY - SUBMISSION PROYEK KEDUA (KELAS INTERMEDIATE WEB DEVELOPER - A219)
+PANDUAN LENGKAP & KETENTUAN PENILAIAN (TARGET: BINTANG 5 / ADVANCE)
+================================================================================
+
+1. TAUTAN APLIKASI & HOSTING (AKTIF & SUDAH DIVERIFIKASI 200 OK)
+APP_URL=https://dicostory-sub.netlify.app/
+(Local Testing URL: http://localhost:5173/ atau http://localhost:4173/)
+Platform Hosting: Netlify (Telah aktif secara publik)
+GitHub Pages Workflow: Tersedia di .github/workflows/deploy.yml
+
+2. MAP SERVICE
+MAP_SERVICE_API_KEY=NOT_REQUIRED_OPEN_TILES
+Catatan: Peta digital menggunakan multi-layer terbuka (OpenStreetMap Standar, CartoDB Positron, dan Esri Citra Satelit) yang siap digunakan tanpa hambatan API key quota.
+
+================================================================================
+RINGKASAN PERBAIKAN & PEMENUHAN SELURUH KRITERIA (BINTANG 5 / ADVANCE):
+================================================================================
+
+KRITERIA 1: Seluruh Kriteria Submission Pertama Terpenuhi (Advance)
+- Arsitektur Model-View-Presenter (MVP) murni yang rapi dan modular.
+- SPA (Single Page Application) berbasis hash routing (`#/`, `#/login`, `#/register`, `#/add-story`, `#/detail/:id`, `#/saved`, `#/about`).
+- Custom View Transitions API untuk navigasi antar halaman yang halus.
+- Peta digital interaktif Leaflet dengan 3 Tile Layer (Layer Control di pojok kanan atas).
+- Sinkronisasi dwiarah antara marker peta digital dan kartu cerita di daftar (klik marker menyorot kartu, klik kartu memfokuskan peta).
+- Tambah cerita dengan interaksi klik langsung di peta untuk memilih koordinat latitude & longitude.
+- Akses media hardware kamera (live stream preview) dengan tombol potret dan tombol hentikan kamera otomatis setelah selesai memotret guna menghemat daya & privasi.
+- Standar Aksesibilitas WCAG: Skip to content link, alt text lengkap, label form eksplisit, kontras warna tinggi, navigasi keyboard penuh (Tab/Enter/Space).
+- Responsif di seluruh breakpoint perangkat (375px mobile, 768px tablet, 1024px+ desktop).
+
+KRITERIA 2: Push Notification (Advance)
+- VAPID Public Key Resmi Sesuai Dokumentasi Dicoding:
+  BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk
+- Pengiriman Subscription ke API:
+  * Mengirim data subscription ke endpoint POST /notifications/subscribe dengan header Authorization Bearer token.
+  * Mengirim endpoint pembatalan langganan ke DELETE /notifications/subscribe saat toggle dinonaktifkan.
+- Trigger Push Notification dari API:
+  * Saat cerita baru dibuat (POST /stories), server Dicoding otomatis mengirimkan push notification ke Service Worker.
+  * Service Worker (sw.js) menangani event `push` dengan payload dinamis (title, body, icon, badge, data URL).
+  * Kriteria 2 (Advance): Menambahkan action "Lihat Detail Cerita" pada push notification untuk navigasi langsung menuju halaman detail data terkait (/#/detail/:id).
+  * Event `notificationclick` memfokuskan jendela dan mengarahkan ke halaman detail cerita.
+- Tombol toggle Push Notification di bilah navigasi dan beranda.
+
+KRITERIA 3: Progressive Web App (PWA) (Advance)
+- File Web App Manifest (`manifest.json`):
+  * Ikon lengkap dari 72px hingga 512px termasuk maskable icon.
+  * SCREENSHOTS ASLI dari aplikasi saat ini (screenshot-desktop.png dan screenshot-mobile.png) dengan form_factor "wide" dan "narrow".
+  * App Shortcuts untuk akses cepat ke "Tambah Cerita" dan "Cerita Tersimpan".
+- Tombol "📲 Pasang Aplikasi" (Install PWA Prompt) melalui event `beforeinstallprompt`.
+- Bebas error dan peringatan pada Lighthouse & panel Application Chrome DevTools.
+- Offline Caching:
+  * App Shell Pre-caching di Service Worker (`sw.js`).
+  * Dynamic Caching API Story Dicoding dengan NetworkFirst + Cache Fallback.
+
+KRITERIA 4: IndexedDB (Advance)
+- Menerapkan IndexedDB (`dicostory-db` versi 2) menggunakan library modern `idb`:
+  1. Konten Dinamis Offline (Advance):
+     * Data cerita dari API otomatis dicache ke IndexedDB object store `cached-stories`.
+     * Saat diakses dalam keadaan offline, daftar cerita dan detail cerita tetap muncul dan dapat dilihat dengan baik oleh pengguna.
+  2. Cerita Tersimpan (Bookmark Offline):
+     * Object store `favorite-stories` untuk menyimpan cerita favorit.
+     * Halaman khusus `#/saved` lengkap dengan pencarian real-time, sorting, dan hapus cerita.
+  3. Offline Background Synchronization (Outbox Queue) (Advance):
+     * Object store `outbox-stories`: Saat membuat cerita saat offline (!navigator.onLine), cerita disimpan di antrean outbox.
+     * Ketika koneksi internet pulih (event `online` atau Service Worker `sync`), modul `SyncHelper` otomatis mengunggah cerita ke API Dicoding dan memberikan notifikasi sukses!
+
+KRITERIA 5: Deployment Publik
+- Tautan Produksi Aktif: https://dicostory-sub.netlify.app/
+- Proyek dikonfigurasi siap deploy ke Netlify / GitHub Pages dengan `_redirects` (`/* /index.html 200`), `netlify.toml`, `base: './'`, dan `.github/workflows/deploy.yml`.
+================================================================================

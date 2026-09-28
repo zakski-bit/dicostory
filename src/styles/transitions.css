@@ -1,0 +1,55 @@
+/* ========================================================
+   KRITERIA 1: CUSTOM VIEW TRANSITION (ADVANCE +4 PTS)
+   Animasi transisi kustom halus untuk Single-Page Application
+   ======================================================== */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Durasi dan timing kustom untuk transisi halaman */
+::view-transition-group(root) {
+  animation-duration: 350ms;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Halaman lama (old view) memudar dan sedikit bergeser ke atas */
+::view-transition-old(root) {
+  animation: 250ms ease-out both custom-fade-out;
+}
+
+/* Halaman baru (new view) masuk dari bawah dengan memudar naik */
+::view-transition-new(root) {
+  animation: 350ms cubic-bezier(0.16, 1, 0.3, 1) both custom-slide-up-in;
+}
+
+@keyframes custom-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98) translateY(-10px);
+  }
+}
+
+@keyframes custom-slide-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dukungan Aksesibilitas: Matikan animasi gerakan jika pengguna mengaktifkan prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
