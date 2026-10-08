@@ -1622,35 +1622,41 @@ body {
   flex-shrink: 0;
 }
 
-/* Diagnostics Modal */
+/* Diagnostics Modal (Overlay Popup) */
+#diagnostics-modal,
+.diagnostics-modal-backdrop,
 .diag-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 9999;
-  display: flex;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999 !important;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 16px;
   animation: fadeIn 0.2s ease-out;
 }
 
+.diagnostics-modal-card,
 .diag-modal-card {
-  background-color: var(--color-surface);
+  background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.3);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
   width: 100%;
-  max-width: 660px;
-  max-height: 90vh;
+  max-width: 620px;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.diagnostics-header,
 .diag-modal-header {
   padding: 18px 24px;
   border-bottom: 1px solid var(--color-border);
@@ -1660,6 +1666,7 @@ body {
   background-color: #f8fafc;
 }
 
+.diagnostics-header-title,
 .diag-modal-title {
   display: flex;
   align-items: center;
@@ -1670,135 +1677,106 @@ body {
   margin: 0;
 }
 
+.diagnostics-body,
 .diag-modal-body {
   padding: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
-.diag-nav-tabs {
-  display: flex;
-  gap: 6px;
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 8px;
-}
-
-.diag-tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
+.diagnostics-desc {
+  font-size: 0.9rem;
   color: var(--color-text-subtle);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
+  line-height: 1.5;
+  margin: 0;
 }
 
-.diag-tab-btn:hover {
-  background-color: #f1f5f9;
-  color: var(--color-text-main);
-}
-
-.diag-tab-btn.active {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
-  border-color: rgba(30, 64, 175, 0.15);
-}
-
-.diag-card-box {
+.diag-section {
   background-color: #f8fafc;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.diag-card-title {
+.diag-section-title {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--color-text-main);
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
 }
 
-.diag-card-desc {
+.diag-section-desc {
   font-size: 0.85rem;
   color: var(--color-text-subtle);
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
 }
 
-.diag-status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed var(--color-border);
-  font-size: 0.85rem;
-}
-
-.diag-status-row:last-child {
-  border-bottom: none;
-}
-
-.diag-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.diag-status-pill.online {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-
-.diag-status-pill.offline {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-.diag-status-pill.active {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.diag-status-pill.inactive {
-  background-color: #f1f5f9;
-  color: #64748b;
-}
-
-.diag-actions-row {
+.diag-actions {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
+.diag-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.diag-stat-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.diag-stat-num {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.diag-stat-num.text-success {
+  color: var(--color-success);
+}
+
+.diag-stat-num.text-danger {
+  color: var(--color-danger);
+}
+
+.diag-stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-subtle);
+  font-weight: 600;
+}
+
+.diagnostics-footer,
 .diag-modal-footer {
   padding: 14px 24px;
   border-top: 1px solid var(--color-border);
   background-color: #f8fafc;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
+.btn-close-diagnostics,
 .btn-close-modal {
   background: transparent;
   border: none;
@@ -1812,12 +1790,12 @@ body {
   transition: all var(--transition-fast);
 }
 
+.btn-close-diagnostics:hover,
 .btn-close-modal:hover {
   background-color: #e2e8f0;
   color: var(--color-text-main);
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

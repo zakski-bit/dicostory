@@ -169,7 +169,8 @@ class App {
       this.#currentPresenter = null;
     }
 
-    await this.#updateNavigation();
+    // Jalankan pembaruan navigasi secara aman
+    this.#updateNavigation().catch((err) => console.warn('Gagal memperbarui navigasi:', err));
 
     // Inisialisasi View & Presenter baru
     const viewInstance = new routeConfig.view();
@@ -184,7 +185,11 @@ class App {
     });
 
     // Inisialisasi logika presenter setelah DOM ter-render
-    await presenterInstance.init();
+    try {
+      await presenterInstance.init();
+    } catch (presenterErr) {
+      console.error('Error saat inisialisasi presenter:', presenterErr);
+    }
 
     // Pastikan fokus aksesibel pada konten utama
     this.#content.setAttribute('tabindex', '-1');

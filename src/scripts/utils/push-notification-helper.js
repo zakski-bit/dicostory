@@ -23,14 +23,22 @@ const PushNotificationHelper = {
 
   async getRegistration() {
     if (!('serviceWorker' in navigator)) return null;
-    return navigator.serviceWorker.ready;
+    try {
+      // Gunakan timeout agar tidak pernah menggantung proses render jika SW belum aktif
+      const readyPromise = navigator.serviceWorker.ready;
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 1000));
+      return await Promise.race([readyPromise, timeoutPromise]);
+    } catch (err) {
+      console.warn('Gagal mendapatkan registration Service Worker:', err);
+      return null;
+    }
   },
 
   async isSubscribed() {
     if (!this.isSupported()) return false;
     try {
       const reg = await this.getRegistration();
-      if (!reg) return false;
+      if (!reg || !reg.pushManager) return false;
       const subscription = await reg.pushManager.getSubscription();
       return Boolean(subscription);
     } catch (err) {
