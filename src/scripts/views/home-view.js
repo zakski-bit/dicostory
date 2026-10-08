@@ -1,5 +1,6 @@
 import { escapeHtml, truncateText } from '../utils/index';
 import { formatIndonesianDate, formatTimeAgo } from '../utils/date-helper';
+import ICONS from '../utils/icons';
 
 class HomeView {
   getTemplate() {
@@ -7,21 +8,27 @@ class HomeView {
       <section class="hero-section">
         <div class="container hero-content">
           <div class="hero-text">
+            <div class="hero-pill">
+              <span class="hero-pill-dot" aria-hidden="true"></span>
+              <span>Platform Cerita Nusantara</span>
+            </div>
             <h1 class="hero-title">Jelajahi & Bagikan Cerita di Seluruh Nusantara</h1>
-            <p class="hero-desc">Setiap sudut negeri menyimpan kisah berharga. Bagikan momen Anda dan temukan jejak cerita di peta interaktif.</p>
+            <p class="hero-desc">
+              Temukan kisah inspiratif dari berbagai pelosok negeri melalui peta interaktif, simpan ke memori offline, dan abadikan perjalanan Anda.
+            </p>
             <div class="hero-actions">
               <a href="#/add-story" class="btn btn-primary" id="btn-hero-add">
-                <span aria-hidden="true">➕</span> Bagikan Cerita Baru
+                <span class="btn-icon">${ICONS.plus(16)}</span>
+                <span>Bagikan Cerita</span>
               </a>
               <a href="#map-section" class="btn btn-secondary" id="btn-hero-map">
-                <span aria-hidden="true">🗺️</span> Buka Peta Digital
+                <span class="btn-icon">${ICONS.map(16)}</span>
+                <span>Buka Peta</span>
               </a>
               <a href="#/saved" class="btn btn-secondary" id="btn-hero-saved">
-                <span aria-hidden="true">⭐</span> Cerita Tersimpan
+                <span class="btn-icon">${ICONS.bookmark(16)}</span>
+                <span>Cerita Tersimpan</span>
               </a>
-              <button type="button" class="btn btn-secondary" id="btn-hero-push">
-                <span aria-hidden="true">🔔</span> Uji Push Notifikasi
-              </button>
             </div>
           </div>
         </div>
@@ -32,18 +39,21 @@ class HomeView {
         <div class="section-header">
           <div>
             <h2 id="map-heading" class="section-title">Peta Persebaran Cerita</h2>
-            <p class="section-subtitle">Pilih layer peta pada kontrol sudut kanan atas dan klik marker untuk melihat cerita di lokasi tersebut.</p>
+            <p class="section-subtitle">Gunakan kontrol layer di sudut kanan atas dan klik titik marker untuk melihat kisah di lokasi tersebut.</p>
           </div>
           <div class="map-stats">
-            <span class="badge badge-primary" id="map-marker-count">Memuat titik...</span>
+            <span class="badge badge-primary" id="map-marker-count">
+              <span class="badge-icon">${ICONS.mapPin(13)}</span>
+              <span id="map-marker-text">Memuat titik...</span>
+            </span>
           </div>
         </div>
 
         <div class="map-wrapper">
           <div id="map" class="map-container" role="region" aria-label="Peta digital interaktif persebaran lokasi cerita"></div>
           <div class="map-legend">
-            <span class="legend-item"><span class="legend-dot active-dot" aria-hidden="true"></span> Marker Aktif / Dipilih</span>
-            <span class="legend-item"><span class="legend-dot normal-dot" aria-hidden="true"></span> Titik Cerita</span>
+            <span class="legend-item"><span class="legend-dot active-dot" aria-hidden="true"></span> Marker Terpilih</span>
+            <span class="legend-item"><span class="legend-dot normal-dot" aria-hidden="true"></span> Titik Lokasi Cerita</span>
           </div>
         </div>
       </section>
@@ -52,14 +62,14 @@ class HomeView {
       <section class="stories-section container" aria-labelledby="stories-heading">
         <div class="stories-header">
           <div>
-            <h2 id="stories-heading" class="section-title">Semua Cerita Terbaru</h2>
-            <p class="section-subtitle">Klik kartu untuk menyorot lokasi pada peta di atas.</p>
+            <h2 id="stories-heading" class="section-title">Daftar Cerita Terbaru</h2>
+            <p class="section-subtitle">Pilih kartu cerita untuk menyorot lokasinya pada peta interaktif.</p>
           </div>
 
           <div class="search-filter-box">
             <label for="story-search" class="visually-hidden">Cari cerita berdasarkan nama atau isi cerita</label>
             <div class="search-input-wrapper">
-              <span class="search-icon" aria-hidden="true">🔍</span>
+              <span class="search-icon" aria-hidden="true">${ICONS.search(16)}</span>
               <input
                 type="search"
                 id="story-search"
@@ -71,9 +81,17 @@ class HomeView {
           </div>
         </div>
 
+        <div class="filter-quick-bar">
+          <button type="button" class="quick-filter-btn active" data-filter="all">Semua Cerita</button>
+          <button type="button" class="quick-filter-btn" data-filter="geo">
+            <span class="btn-icon">${ICONS.mapPin(13)}</span>
+            <span>Dengan Lokasi Peta</span>
+          </button>
+        </div>
+
         <div id="stories-loading" class="state-container" aria-live="polite">
           <div class="spinner" aria-hidden="true"></div>
-          <p>Sedang memuat data cerita dari server...</p>
+          <p>Memuat data cerita dari server...</p>
         </div>
 
         <div id="stories-error" class="state-container state-error" role="alert" style="display: none;">
@@ -82,9 +100,11 @@ class HomeView {
         </div>
 
         <div id="stories-empty" class="state-container state-empty" style="display: none;">
-          <span class="state-icon" aria-hidden="true">📭</span>
+          <div class="state-icon-box" aria-hidden="true">
+            ${ICONS.book(32)}
+          </div>
           <h3>Tidak Ada Cerita Ditemukan</h3>
-          <p>Belum ada cerita yang cocok dengan kata kunci pencarian Anda.</p>
+          <p>Belum ada cerita yang cocok dengan kata kunci atau filter pencarian Anda.</p>
         </div>
 
         <div id="stories-grid" class="stories-grid" style="display: none;"></div>
@@ -127,16 +147,23 @@ class HomeView {
               />
               ${
                 hasLocation
-                  ? `<span class="story-badge-loc" title="Memiliki koordinat peta">📍 Lokasi Tersedia</span>`
+                  ? `<span class="story-badge-loc" title="Memiliki koordinat peta">
+                      <span class="badge-icon">${ICONS.mapPin(12)}</span>
+                      <span>Lokasi Terpetakan</span>
+                    </span>`
                   : ''
               }
             </div>
 
             <div class="story-content">
               <div class="story-meta">
-                <span class="story-author-name">👤 ${escapeHtml(story.name)}</span>
+                <span class="story-author-name">
+                  <span class="meta-icon">${ICONS.user(13)}</span>
+                  <span>${escapeHtml(story.name)}</span>
+                </span>
                 <time datetime="${story.createdAt}" class="story-time">
-                  🗓️ ${formatIndonesianDate(story.createdAt)}
+                  <span class="meta-icon">${ICONS.calendar(13)}</span>
+                  <span>${formatIndonesianDate(story.createdAt)}</span>
                 </time>
               </div>
 
@@ -152,7 +179,8 @@ class HomeView {
                       data-id="${story.id}"
                       aria-label="Sorot lokasi cerita ${escapeHtml(story.name)} pada peta"
                     >
-                      🗺️ Lihat di Peta
+                      <span class="btn-icon">${ICONS.map(13)}</span>
+                      <span>Peta</span>
                     </button>
                   `
                     : `
@@ -167,10 +195,10 @@ class HomeView {
                     aria-label="Simpan cerita oleh ${escapeHtml(story.name)} ke tersimpan offline"
                     title="Simpan ke favorit offline"
                   >
-                    ⭐
+                    ${ICONS.bookmark(15)}
                   </button>
                   <a href="#/detail/${story.id}" class="btn btn-secondary btn-sm" aria-label="Buka detail lengkap cerita ${escapeHtml(story.name)}">
-                    Baca
+                    Detail
                   </a>
                 </div>
               </div>
@@ -192,14 +220,14 @@ class HomeView {
       };
 
       card.addEventListener('click', (e) => {
-        // Jangan trigger jika klik tombol detail
-        if (e.target.closest('a')) return;
+        // Jangan trigger jika klik tombol detail atau bookmark
+        if (e.target.closest('a') || e.target.closest('.btn-card-bookmark')) return;
         triggerClick();
       });
 
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          if (!e.target.closest('a')) {
+          if (!e.target.closest('a') && !e.target.closest('.btn-card-bookmark')) {
             e.preventDefault();
             triggerClick();
           }
@@ -243,9 +271,9 @@ class HomeView {
   }
 
   updateMarkerCount(count) {
-    const badge = document.getElementById('map-marker-count');
-    if (badge) {
-      badge.textContent = `${count} Titik Lokasi Cerita Terpetakan`;
+    const textEl = document.getElementById('map-marker-text');
+    if (textEl) {
+      textEl.textContent = `${count} Lokasi Terpetakan`;
     }
   }
 
@@ -256,6 +284,17 @@ class HomeView {
         handler(e.target.value);
       });
     }
+  }
+
+  bindQuickFilter(handler) {
+    const filterBtns = document.querySelectorAll('.quick-filter-btn');
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        handler(btn.getAttribute('data-filter'));
+      });
+    });
   }
 }
 

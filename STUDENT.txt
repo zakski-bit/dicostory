@@ -46,7 +46,7 @@ KRITERIA 3: Progressive Web App (PWA) (Advance)
   * Ikon lengkap dari 72px hingga 512px termasuk maskable icon.
   * SCREENSHOTS ASLI dari aplikasi saat ini (screenshot-desktop.png dan screenshot-mobile.png) dengan form_factor "wide" dan "narrow".
   * App Shortcuts untuk akses cepat ke "Tambah Cerita" dan "Cerita Tersimpan".
-- Tombol "📲 Pasang Aplikasi" (Install PWA Prompt) melalui event `beforeinstallprompt`.
+- Tombol "Pasang Aplikasi" (Install PWA Prompt) melalui event `beforeinstallprompt`.
 - Bebas error dan peringatan pada Lighthouse & panel Application Chrome DevTools.
 - Offline Caching:
   * App Shell Pre-caching di Service Worker (`sw.js`).

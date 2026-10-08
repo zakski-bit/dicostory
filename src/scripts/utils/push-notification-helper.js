@@ -186,7 +186,7 @@ const PushNotificationHelper = {
         timestamp: Date.now(),
       },
       actions: [
-        { action: 'open_detail', title: '👀 Buka Sekarang' },
+        { action: 'open_detail', title: 'Buka Sekarang' },
       ],
     };
 

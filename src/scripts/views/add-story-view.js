@@ -1,3 +1,5 @@
+import { ICONS } from '../utils/icons';
+
 class AddStoryView {
   getTemplate() {
     return `
@@ -14,7 +16,7 @@ class AddStoryView {
             <!-- PILIHAN MEDIA GAMBAR -->
             <fieldset class="form-fieldset">
               <legend class="form-legend">Foto Cerita <span class="required">*</span></legend>
-              <p class="fieldset-desc">Pilih salah satu cara: unggah file gambar dari perangkat atau potret langsung menggunakan kamera.</p>
+              <p class="fieldset-desc">Pilih salah satu metode: unggah berkas gambar dari perangkat Anda atau potret langsung menggunakan kamera.</p>
 
               <div class="media-tabs" role="tablist" aria-label="Metode Pemilihan Gambar">
                 <button
@@ -25,7 +27,7 @@ class AddStoryView {
                   aria-selected="true"
                   aria-controls="panel-upload"
                 >
-                  📁 Unggah File
+                  ${ICONS.upload(15)} Unggah Berkas
                 </button>
                 <button
                   type="button"
@@ -35,7 +37,7 @@ class AddStoryView {
                   aria-selected="false"
                   aria-controls="panel-camera"
                 >
-                  📷 Ambil via Kamera
+                  ${ICONS.camera(15)} Ambil via Kamera
                 </button>
               </div>
 
@@ -50,7 +52,7 @@ class AddStoryView {
                     class="file-input-hidden"
                   />
                   <label for="story-image-file" class="dropzone-label">
-                    <span class="dropzone-icon" aria-hidden="true">📤</span>
+                    <span class="dropzone-icon" aria-hidden="true">${ICONS.upload(36)}</span>
                     <span class="dropzone-text">Pilih berkas gambar atau seret file ke sini</span>
                     <span class="dropzone-hint">Format JPG, PNG, atau WebP (Maksimal 1 MB)</span>
                   </label>
@@ -63,20 +65,20 @@ class AddStoryView {
                   <div class="camera-viewport-box">
                     <video id="camera-video" class="camera-video" playsinline autoplay muted></video>
                     <div id="camera-placeholder" class="camera-placeholder">
-                      <span class="camera-icon" aria-hidden="true">📷</span>
-                      <p>Kamera belum aktif</p>
+                      <span class="camera-icon" aria-hidden="true">${ICONS.camera(36)}</span>
+                      <p>Kamera belum diaktifkan</p>
                     </div>
                   </div>
 
                   <div class="camera-controls">
                     <button type="button" id="btn-start-camera" class="btn btn-outline-primary btn-sm">
-                      Aktifkan Kamera
+                      ${ICONS.camera(14)} Aktifkan Kamera
                     </button>
                     <button type="button" id="btn-capture-camera" class="btn btn-primary btn-sm" style="display: none;">
-                      📸 Potret Gambar
+                      ${ICONS.camera(14)} Potret Gambar
                     </button>
                     <button type="button" id="btn-stop-camera" class="btn btn-danger btn-sm" style="display: none;">
-                      Matikan Kamera
+                      ${ICONS.close(14)} Matikan Kamera
                     </button>
                   </div>
                 </div>
@@ -87,7 +89,9 @@ class AddStoryView {
                 <p class="preview-title">Foto Terpilih:</p>
                 <div class="preview-img-wrapper">
                   <img id="image-preview" src="" alt="Pratinjau foto yang akan diunggah" class="image-preview" />
-                  <button type="button" id="btn-remove-image" class="btn-remove-preview" aria-label="Hapus foto terpilih">×</button>
+                  <button type="button" id="btn-remove-image" class="btn-remove-preview" aria-label="Hapus foto terpilih">
+                    ${ICONS.close(14)}
+                  </button>
                 </div>
               </div>
               <span id="photo-error" class="field-error" aria-live="polite"></span>
@@ -115,15 +119,15 @@ class AddStoryView {
 
             <!-- KOORDINAT PETA -->
             <fieldset class="form-fieldset">
-              <legend class="form-legend">Lokasi Cerita pada Peta (Opsional namun Sangat Disarankan)</legend>
-              <p class="fieldset-desc">Klik titik mana pun pada peta di bawah ini untuk menentukan koordinat lokasi cerita Anda.</p>
+              <legend class="form-legend">Lokasi Cerita pada Peta (Opsional)</legend>
+              <p class="fieldset-desc">Klik titik mana pun pada peta untuk menentukan koordinat lokasi cerita Anda.</p>
 
               <div class="geo-actions-bar">
                 <button type="button" id="btn-current-location" class="btn btn-outline-secondary btn-sm">
-                  📍 Gunakan Lokasi Saat Ini (GPS)
+                  ${ICONS.mapPin(14)} Gunakan Lokasi Saat Ini (GPS)
                 </button>
                 <button type="button" id="btn-clear-location" class="btn btn-outline-secondary btn-sm" style="display: none;">
-                  Hapus Pilihan Lokasi
+                  ${ICONS.close(14)} Hapus Lokasi
                 </button>
               </div>
 
@@ -159,7 +163,7 @@ class AddStoryView {
             <div class="form-footer">
               <a href="#/" class="btn btn-secondary">Batal</a>
               <button type="submit" id="btn-submit-story" class="btn btn-primary btn-lg">
-                <span class="btn-text">🚀 Terbitkan Cerita</span>
+                <span class="btn-text">${ICONS.upload(15)} Terbitkan Cerita</span>
                 <span class="btn-spinner" aria-hidden="true" style="display: none;"></span>
               </button>
             </div>
@@ -227,7 +231,7 @@ class AddStoryView {
     }
 
     if (clearBtn) {
-      clearBtn.style.display = lat !== null ? 'inline-block' : 'none';
+      clearBtn.style.display = lat !== null ? 'inline-flex' : 'none';
     }
   }
 
@@ -242,7 +246,7 @@ class AddStoryView {
       text.textContent = 'Menerbitkan Cerita...';
       if (spinner) spinner.style.display = 'inline-block';
     } else {
-      text.textContent = '🚀 Terbitkan Cerita';
+      text.innerHTML = `${ICONS.upload(15)} Terbitkan Cerita`;
       if (spinner) spinner.style.display = 'none';
     }
   }

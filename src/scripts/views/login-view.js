@@ -46,7 +46,7 @@ class LoginView {
             </button>
 
             <button type="button" id="btn-demo-login" class="btn btn-outline-secondary btn-block mt-3">
-              🧪 Masuk dengan Akun Demo (Uji Coba Cepat)
+              Masuk Cepat dengan Akun Demo
             </button>
           </form>
 

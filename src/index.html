@@ -25,7 +25,9 @@
     <header class="app-header">
       <div class="main-header container">
         <a class="brand-name" href="#/" aria-label="DicoStory Beranda">
-          <span class="brand-icon" aria-hidden="true">📖</span>
+          <span class="brand-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path><path d="M6 6h10"></path><path d="M6 10h10"></path></svg>
+          </span>
           <span class="brand-text">Dico<span class="text-accent">Story</span></span>
         </a>
 
@@ -40,12 +42,23 @@
 
         <div class="header-actions">
           <button
+            id="btn-open-diagnostics"
+            class="btn btn-outline-secondary btn-sm btn-diagnostics"
+            type="button"
+            aria-label="Buka panel pengujian fitur dan diagnostik"
+            title="Panel Uji Fitur & Diagnostik PWA"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><line x1="4" x2="4" y1="21" y2="14"></line><line x1="4" x2="4" y1="10" y2="3"></line><line x1="12" x2="12" y1="21" y2="12"></line><line x1="12" x2="12" y1="8" y2="3"></line><line x1="20" x2="20" y1="21" y2="16"></line><line x1="20" x2="20" y1="12" y2="3"></line><line x1="1" x2="7" y1="14" y2="14"></line><line x1="9" x2="15" y1="8" y2="8"></line><line x1="17" x2="23" y1="16" y2="16"></line></svg>
+            <span class="diag-btn-text">Uji Fitur</span>
+          </button>
+          <button
             id="btn-install-pwa"
             class="btn btn-primary btn-sm btn-install-pwa hidden"
             type="button"
             aria-label="Pasang Aplikasi DicoStory ke Perangkat"
           >
-            📲 <span class="install-text">Pasang Aplikasi</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+            <span class="install-text">Pasang</span>
           </button>
           <button
             id="drawer-button"
@@ -55,7 +68,7 @@
             aria-expanded="false"
             aria-controls="navigation-drawer"
           >
-            <span class="drawer-icon" aria-hidden="true">☰</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg drawer-icon"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
           </button>
         </div>
       </div>

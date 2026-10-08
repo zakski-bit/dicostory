@@ -1,5 +1,6 @@
 import { escapeHtml } from '../utils/index';
 import { formatIndonesianDate, formatTimeAgo } from '../utils/date-helper';
+import { ICONS } from '../utils/icons';
 
 class DetailView {
   getTemplate() {
@@ -7,10 +8,10 @@ class DetailView {
       <section class="detail-section container" aria-labelledby="detail-heading">
         <div class="detail-back-bar">
           <a href="#/" class="btn btn-secondary btn-sm" id="btn-back-home">
-            ← Kembali ke Beranda
+            ${ICONS.arrowLeft(16)} Kembali
           </a>
           <button id="btn-favorite" class="btn btn-outline-primary btn-sm btn-favorite" type="button" aria-pressed="false" aria-label="Simpan cerita ke favorit offline">
-            ⭐ Simpan Favorit (Offline)
+            ${ICONS.bookmark(15)} Simpan Favorit (Offline)
           </button>
         </div>
 
@@ -33,9 +34,9 @@ class DetailView {
             <header class="detail-header">
               <h1 id="detail-heading" class="detail-title">Judul Cerita</h1>
               <div class="detail-meta">
-                <span class="detail-author" id="detail-author">👤 Penulis</span>
+                <span class="detail-author" id="detail-author">${ICONS.user(14)} Penulis</span>
                 <span class="detail-dot">•</span>
-                <time id="detail-date" class="detail-date">🗓️ Tanggal</time>
+                <time id="detail-date" class="detail-date">${ICONS.calendar(14)} Tanggal</time>
               </div>
             </header>
 
@@ -46,7 +47,7 @@ class DetailView {
 
             <!-- DETAIL LOCATION MAP -->
             <div id="detail-map-box" class="detail-map-box" style="display: none;">
-              <h3 class="detail-map-title">📍 Lokasi Cerita</h3>
+              <h3 class="detail-map-title">${ICONS.mapPin(16)} Lokasi Cerita</h3>
               <p class="detail-map-subtitle" id="detail-coords-text"></p>
               <div id="detail-map" class="detail-map" role="region" aria-label="Peta lokasi cerita ini"></div>
             </div>
@@ -70,9 +71,9 @@ class DetailView {
 
     contentEl.style.display = 'block';
     if (headingEl) headingEl.textContent = `Cerita oleh ${story.name}`;
-    if (authorEl) authorEl.textContent = `👤 ${story.name}`;
+    if (authorEl) authorEl.innerHTML = `${ICONS.user(14)} ${escapeHtml(story.name)}`;
     if (dateEl) {
-      dateEl.textContent = `🗓️ ${formatIndonesianDate(story.createdAt)} (${formatTimeAgo(story.createdAt)})`;
+      dateEl.innerHTML = `${ICONS.calendar(14)} ${formatIndonesianDate(story.createdAt)} (${formatTimeAgo(story.createdAt)})`;
       dateEl.setAttribute('datetime', story.createdAt);
     }
     if (descEl) descEl.textContent = story.description;

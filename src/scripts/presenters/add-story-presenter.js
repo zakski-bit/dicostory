@@ -6,6 +6,7 @@ import DatabaseHelper from '../data/db';
 import SyncHelper from '../utils/sync-helper';
 import CameraHelper from '../utils/camera-helper';
 import NotificationHelper from '../utils/notification';
+import { ICONS } from '../utils/icons';
 
 class AddStoryPresenter {
   #view = null;
@@ -83,7 +84,7 @@ class AddStoryPresenter {
       });
     }
 
-    this.#marker.bindPopup(`📍 Lokasi Terpilih:<br>Lat: ${lat.toFixed(5)}<br>Lon: ${lng.toFixed(5)}`).openPopup();
+    this.#marker.bindPopup(`<b>Lokasi Terpilih</b><br>Lat: ${lat.toFixed(5)}<br>Lon: ${lng.toFixed(5)}`).openPopup();
     this.#view.setCoordinates(lat, lng);
   }
 
@@ -235,12 +236,12 @@ class AddStoryPresenter {
               this.#map.flyTo([latitude, longitude], 14);
             }
             btnCurrent.disabled = false;
-            btnCurrent.textContent = '📍 Gunakan Lokasi Saat Ini (GPS)';
+            btnCurrent.innerHTML = `${ICONS.mapPin(14)} Gunakan Lokasi Saat Ini (GPS)`;
             NotificationHelper.success('Lokasi saat ini berhasil ditemukan!');
           },
           (err) => {
             btnCurrent.disabled = false;
-            btnCurrent.textContent = '📍 Gunakan Lokasi Saat Ini (GPS)';
+            btnCurrent.innerHTML = `${ICONS.mapPin(14)} Gunakan Lokasi Saat Ini (GPS)`;
             NotificationHelper.error(`Gagal mendapatkan lokasi GPS: ${err.message}`);
           },
           { enableHighAccuracy: true, timeout: 10000 }

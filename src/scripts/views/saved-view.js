@@ -1,5 +1,6 @@
 import { escapeHtml } from '../utils/index';
-import { formatIndonesianDate, formatTimeAgo } from '../utils/date-helper';
+import { formatIndonesianDate } from '../utils/date-helper';
+import { ICONS } from '../utils/icons';
 
 class SavedView {
   getTemplate() {
@@ -7,9 +8,10 @@ class SavedView {
       <section class="saved-section" aria-labelledby="saved-heading">
         <div class="hero-section">
           <div class="container hero-content text-center">
-            <h1 id="saved-heading" class="hero-title">⭐ Cerita Tersimpan (Offline)</h1>
+            <div class="hero-badge">Penyimpanan Lokal</div>
+            <h1 id="saved-heading" class="hero-title">Cerita Tersimpan</h1>
             <p class="hero-subtitle">
-              Koleksi cerita favorit Anda yang tersimpan di IndexedDB. Anda dapat membaca dan mengelolanya kapan saja, bahkan tanpa koneksi internet.
+              Koleksi cerita favorit yang tersimpan di IndexedDB. Anda dapat membaca dan mengelolanya kapan saja secara offline tanpa kuota internet.
             </p>
           </div>
         </div>
@@ -21,7 +23,7 @@ class SavedView {
               <div class="filter-item filter-search">
                 <label for="search-saved-input" class="form-label">Cari di Cerita Tersimpan</label>
                 <div class="input-with-icon">
-                  <span class="input-icon" aria-hidden="true">🔍</span>
+                  <span class="input-icon" aria-hidden="true">${ICONS.search(16)}</span>
                   <input
                     type="search"
                     id="search-saved-input"
@@ -55,10 +57,10 @@ class SavedView {
 
           <!-- EMPTY STATE -->
           <div id="saved-empty" class="state-container state-empty card p-5 text-center" style="display: none;">
-            <div class="empty-icon" style="font-size: 3rem;" aria-hidden="true">📚</div>
+            <div class="empty-icon text-muted" aria-hidden="true">${ICONS.bookmark(44)}</div>
             <h2 class="h4 mt-3">Belum Ada Cerita Tersimpan</h2>
             <p class="text-muted max-w-md mx-auto">
-              Anda belum menandai cerita apa pun sebagai favorit. Buka beranda dan klik tombol bintang pada cerita yang Anda sukai untuk menyimpannya ke memori offline.
+              Anda belum menandai cerita sebagai favorit. Buka beranda dan klik tombol simpan pada cerita yang disukai untuk menyimpannya ke memori offline.
             </p>
             <a href="#/" class="btn btn-primary mt-3">Jelajahi Beranda</a>
           </div>
@@ -103,15 +105,15 @@ class SavedView {
                 class="story-card-image"
                 loading="lazy"
               />
-              <span class="badge badge-saved">⭐ Tersimpan</span>
-              ${hasCoords ? `<span class="badge badge-geo">📍 Ada Lokasi</span>` : ''}
+              <span class="badge badge-saved">${ICONS.bookmarkFilled(12)} Tersimpan</span>
+              ${hasCoords ? `<span class="badge badge-geo">${ICONS.mapPin(12)} Ada Lokasi</span>` : ''}
             </div>
 
             <div class="story-card-body">
               <header class="story-card-header">
                 <h3 class="story-card-title">${escapeHtml(story.name)}</h3>
                 <time class="story-card-date" datetime="${story.createdAt}">
-                  🗓️ ${formatIndonesianDate(story.createdAt)}
+                  ${ICONS.calendar(12)} ${formatIndonesianDate(story.createdAt)}
                 </time>
               </header>
 
@@ -129,7 +131,7 @@ class SavedView {
                   data-id="${story.id}"
                   aria-label="Hapus cerita ${escapeHtml(story.name)} dari tersimpan"
                 >
-                  🗑️ Hapus
+                  ${ICONS.trash(14)} Hapus
                 </button>
               </footer>
             </div>

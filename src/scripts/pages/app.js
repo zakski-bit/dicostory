@@ -5,6 +5,8 @@ import { transitionHelper } from '../utils/view-transition';
 import NotificationHelper from '../utils/notification';
 
 import PushNotificationHelper from '../utils/push-notification-helper';
+import ICONS from '../utils/icons';
+import DiagnosticsModal from '../utils/diagnostics-modal';
 
 class App {
   #content = null;
@@ -18,6 +20,16 @@ class App {
     this.#navigationDrawer = navigationDrawer;
 
     this.#setupDrawer();
+    this.#setupDiagnostics();
+  }
+
+  #setupDiagnostics() {
+    const diagBtn = document.getElementById('btn-open-diagnostics');
+    if (diagBtn) {
+      diagBtn.addEventListener('click', () => {
+        DiagnosticsModal.open();
+      });
+    }
   }
 
   #setupDrawer() {
@@ -58,16 +70,20 @@ class App {
       PushNotificationHelper.syncSubscriptionToServer();
       navList.innerHTML = `
         <li><a href="#/" class="nav-link">Beranda</a></li>
-        <li><a href="#/saved" class="nav-link">⭐ Tersimpan</a></li>
-        <li><a href="#/add-story" class="nav-link">➕ Tambah Cerita</a></li>
+        <li><a href="#/saved" class="nav-link"><span class="nav-link-icon">${ICONS.bookmark(15)}</span> Tersimpan</a></li>
+        <li><a href="#/add-story" class="nav-link"><span class="nav-link-icon">${ICONS.plus(15)}</span> Buat Cerita</a></li>
         <li><a href="#/about" class="nav-link">Tentang</a></li>
         <li>
           <button type="button" id="btn-toggle-push" class="btn btn-outline-secondary btn-sm nav-push-btn" aria-label="Aktifkan atau nonaktifkan push notifikasi">
-            ${isPushSubscribed ? '🔔 Notifikasi Aktif' : '🔕 Notifikasi'}
+            <span class="btn-icon">${isPushSubscribed ? ICONS.bell(15) : ICONS.bellOff(15)}</span>
+            <span>${isPushSubscribed ? 'Notifikasi Aktif' : 'Notifikasi'}</span>
           </button>
         </li>
         <li class="nav-user-item">
-          <span class="user-pill" title="Akun Masuk">👤 ${user?.name || 'Pengguna'}</span>
+          <span class="user-pill" title="Akun Masuk">
+            <span class="user-icon">${ICONS.user(13)}</span>
+            <span class="user-name">${user?.name || 'Pengguna'}</span>
+          </span>
           <button type="button" id="btn-logout" class="btn btn-outline-danger btn-sm">Keluar</button>
         </li>
       `;
@@ -83,13 +99,14 @@ class App {
     } else {
       navList.innerHTML = `
         <li><a href="#/" class="nav-link">Beranda</a></li>
-        <li><a href="#/saved" class="nav-link">⭐ Tersimpan</a></li>
+        <li><a href="#/saved" class="nav-link"><span class="nav-link-icon">${ICONS.bookmark(15)}</span> Tersimpan</a></li>
         <li><a href="#/login" class="nav-link">Masuk</a></li>
         <li><a href="#/register" class="nav-link">Daftar Akun</a></li>
         <li><a href="#/about" class="nav-link">Tentang</a></li>
         <li>
           <button type="button" id="btn-toggle-push" class="btn btn-outline-secondary btn-sm nav-push-btn" aria-label="Aktifkan atau nonaktifkan push notifikasi">
-            ${isPushSubscribed ? '🔔 Notifikasi Aktif' : '🔕 Notifikasi'}
+            <span class="btn-icon">${isPushSubscribed ? ICONS.bell(15) : ICONS.bellOff(15)}</span>
+            <span>${isPushSubscribed ? 'Notifikasi Aktif' : 'Notifikasi'}</span>
           </button>
         </li>
       `;
@@ -101,14 +118,20 @@ class App {
         const currentlySubscribed = await PushNotificationHelper.isSubscribed();
         if (currentlySubscribed) {
           await PushNotificationHelper.unsubscribe();
-          pushBtn.innerHTML = '🔕 Notifikasi';
+          pushBtn.innerHTML = `
+            <span class="btn-icon">${ICONS.bellOff(15)}</span>
+            <span>Notifikasi</span>
+          `;
         } else {
           const success = await PushNotificationHelper.subscribe();
           if (success) {
-            pushBtn.innerHTML = '🔔 Notifikasi Aktif';
+            pushBtn.innerHTML = `
+              <span class="btn-icon">${ICONS.bell(15)}</span>
+              <span>Notifikasi Aktif</span>
+            `;
             // Tampilkan satu notifikasi sambutan untuk uji langsung
             await PushNotificationHelper.showTestNotification({
-              title: 'DicoStory PWA Terhubung!',
+              title: 'DicoStory PWA Terhubung',
               body: 'Notifikasi berhasil diaktifkan. Anda siap menerima update cerita terbaru.',
               url: '#/',
             });

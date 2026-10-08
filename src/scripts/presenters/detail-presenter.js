@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import StoryModel from '../data/story-model';
 import DatabaseHelper from '../data/db';
 import NotificationHelper from '../utils/notification';
+import { ICONS } from '../utils/icons';
 
 class DetailPresenter {
   #view = null;
@@ -84,12 +85,12 @@ class DetailPresenter {
       btn.classList.add('btn-warning');
       btn.classList.remove('btn-outline-primary');
       btn.setAttribute('aria-pressed', 'true');
-      btn.innerHTML = '⭐ Tersimpan (Klik untuk Hapus)';
+      btn.innerHTML = `${ICONS.bookmarkFilled(15)} Tersimpan (Klik untuk Hapus)`;
     } else {
       btn.classList.remove('btn-warning');
       btn.classList.add('btn-outline-primary');
       btn.setAttribute('aria-pressed', 'false');
-      btn.innerHTML = '⭐ Simpan Favorit (Offline)';
+      btn.innerHTML = `${ICONS.bookmark(15)} Simpan Favorit (Offline)`;
     }
   }
 

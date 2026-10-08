@@ -5,6 +5,7 @@ import StoryModel from '../data/story-model';
 import DatabaseHelper from '../data/db';
 import PushNotificationHelper from '../utils/push-notification-helper';
 import NotificationHelper from '../utils/notification';
+import { ICONS } from '../utils/icons';
 import { escapeHtml, truncateText } from '../utils/index';
 import { formatIndonesianDate } from '../utils/date-helper';
 
@@ -45,6 +46,7 @@ class HomePresenter {
     this.#initMap();
     this.#initHeroPush();
     this.#view.bindSearch((keyword) => this.#handleSearch(keyword));
+    this.#view.bindQuickFilter((filterType) => this.#handleQuickFilter(filterType));
     await this.#loadStories();
 
     // Dengarkan event sinkronisasi offline jika cerita baru selesai diunggah
@@ -104,11 +106,11 @@ class HomePresenter {
     // Pasang layer default ke peta
     osmLayer.addTo(this.#map);
 
-    // Kriteria 2 (Advance): Kontrol Layer dengan 3 tile layer berbeda
+    // Kontrol Layer dengan 3 tile layer berbeda (tanpa emoji, label bersih)
     const baseLayers = {
-      '🗺️ OpenStreetMap Standar': osmLayer,
-      '🏙️ CartoDB Positron (Bersih)': cartoPositron,
-      '🛰️ Esri Citra Satelit': esriSatellite,
+      'Peta Jalan (OpenStreetMap)': osmLayer,
+      'Peta Bersih (CartoDB Positron)': cartoPositron,
+      'Citra Satelit (Esri World)': esriSatellite,
     };
 
     L.control.layers(baseLayers, null, { position: 'topright' }).addTo(this.#map);
@@ -175,7 +177,7 @@ class HomePresenter {
           <div class="map-popup-card">
             <img src="${story.photoUrl}" alt="Foto oleh ${escapeHtml(story.name)}" class="popup-thumb" loading="lazy" />
             <h4 class="popup-title">${escapeHtml(story.name)}</h4>
-            <p class="popup-date">🗓️ ${formatIndonesianDate(story.createdAt)}</p>
+            <p class="popup-date">${ICONS.calendar(12)} ${formatIndonesianDate(story.createdAt)}</p>
             <p class="popup-desc">${escapeHtml(truncateText(story.description, 80))}</p>
             <div class="popup-actions">
               <button class="btn btn-primary btn-xs btn-popup-sync" data-id="${story.id}">
@@ -241,11 +243,13 @@ class HomePresenter {
             await DatabaseHelper.deleteFavoriteStory(storyId);
             btn.classList.remove('btn-warning');
             btn.classList.add('btn-outline-warning');
+            btn.innerHTML = `${ICONS.bookmark(15)} Simpan`;
             NotificationHelper.info('Cerita dihapus dari tersimpan.');
           } else {
             await DatabaseHelper.saveFavoriteStory(story);
             btn.classList.add('btn-warning');
             btn.classList.remove('btn-outline-warning');
+            btn.innerHTML = `${ICONS.bookmarkFilled(15)} Disimpan`;
             NotificationHelper.success('Cerita disimpan untuk dibaca offline!');
           }
         };
@@ -302,6 +306,19 @@ class HomePresenter {
           (s.name && s.name.toLowerCase().includes(q)) ||
           (s.description && s.description.toLowerCase().includes(q))
       );
+    }
+
+    this.#renderMapMarkers(this.#filteredStories);
+    this.#renderStoriesList();
+  }
+
+  #handleQuickFilter(filterType) {
+    if (filterType === 'geo') {
+      this.#filteredStories = this.#stories.filter(
+        (s) => typeof s.lat === 'number' && typeof s.lon === 'number'
+      );
+    } else {
+      this.#filteredStories = [...this.#stories];
     }
 
     this.#renderMapMarkers(this.#filteredStories);
