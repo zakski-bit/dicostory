@@ -1,129 +1,92 @@
-# 📖 DicoStory — Progressive Web App (PWA) with Offline Sync & Geospatial Mapping
+# DicoStory — Progressive Web App with Offline Sync & Geospatial Mapping
+
+Offline-first Progressive Web App (PWA) for interactive story sharing with geospatial mapping, automated background synchronization, and native device capabilities. Built with **Vanilla JavaScript (ES6+)**, **Vite**, **Leaflet.js**, and modern web APIs.
 
 [![Netlify Status](https://img.shields.io/badge/Netlify-Live%20Demo-00C7B7?style=flat&logo=netlify)](https://dicostory-sub.netlify.app/)
 [![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
-[![PWA](https://img.shields.io/badge/PWA-Installable%20%26%20Offline-5A0FC8?style=flat&logo=pwa)](https://web.dev/progressive-web-apps/)
-[![Leaflet](https://img.shields.io/badge/Leaflet-Interactive%20Maps-199900?style=flat&logo=leaflet)](https://leafletjs.com/)
+[![PWA](https://img.shields.io/badge/PWA-Offline--First-5A0FC8?style=flat&logo=pwa)](https://web.dev/progressive-web-apps/)
+[![Leaflet](https://img.shields.io/badge/Leaflet-Geospatial-199900?style=flat&logo=leaflet)](https://leafletjs.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> **DicoStory** adalah platform web modern untuk berbagi cerita inspiratif di seluruh pelosok nusantara dengan visualisasi persebaran geografis interaktif, dukungan Progressive Web App (PWA) penuh, push notifications, dan kemampuan akses luring (offline-first) dengan sinkronisasi otomatis.
+## Live Deployment
 
-🌐 **Live Demo:** [https://dicostory-sub.netlify.app/](https://dicostory-sub.netlify.app/)
+- **Production URL**: [https://dicostory-sub.netlify.app/](https://dicostory-sub.netlify.app/)
 
----
+## Architectural Highlights
 
-## 🌟 Fitur Utama (Key Features)
+DicoStory is designed using the **Model-View-Presenter (MVP)** pattern in pure JavaScript, ensuring separation of concerns, framework-independent maintainability, and optimal performance:
 
-### 1. 📱 Progressive Web App (PWA) & Offline-First
-- **Installable**: Dapat dipasang ke layar utama (*home screen*) pada perangkat Android, iOS, maupun desktop seperti aplikasi native via tombol prompt instalasi.
-- **App Shell & Dynamic API Caching**: Menggunakan Service Worker dengan strategi *NetworkFirst (cache fallback)* dan *StaleWhileRevalidate* sehingga data cerita dan detail tetap dapat diakses meski tanpa koneksi internet.
-- **Web App Manifest**: Lengkap dengan ikon maskable, *app shortcuts*, dan screenshot responsif (*wide* & *narrow*).
-
-### 2. ⚡ IndexedDB & Background Synchronization (Outbox Queue)
-- **Koleksi Cerita Tersimpan (`#/saved`)**: Fitur bookmark cerita favorit ke IndexedDB lokal lengkap dengan fitur pencarian teks real-time, penyaringan, dan pengurutan.
-- **Offline Outbox Sync**: Saat pengguna membuat cerita baru tanpa koneksi internet (`offline`), cerita disimpan rapi di antrean lokal (*outbox*). Begitu koneksi internet pulih (event `online` / background sync), sistem secara otomatis mengunggah cerita ke server dan memberi notifikasi ke pengguna.
-
-### 3. 🔔 Web Push Notification (VAPID & Service Worker)
-- Menerapkan Web Push Notification resmi yang terintegrasi dengan backend API.
-- Menangani event `push` dinamis dan event `notificationclick` dengan *action button* ("Lihat Detail Cerita") yang otomatis mengarahkan peramban ke halaman detail cerita terkait.
-- Pengguna dapat mengaktifkan atau menonaktifkan langganan push notification langsung dari UI.
-
-### 4. 🗺️ Peta Digital Interaktif (Geospatial Mapping)
-- Peta digital berbasis **Leaflet.js** dengan dukungan kontrol multi-layer (OpenStreetMap Standar, CartoDB Positron, dan Esri Citra Satelit Resolusi Tinggi).
-- **Sinkronisasi Dwiarah**:
-  - Mengklik titik marker peta otomatis menyorot kartu cerita yang bersangkutan.
-  - Mengklik kartu cerita otomatis memfokuskan kamera peta dan membuka popup cerita di lokasi tersebut.
-- Pemilihan koordinat cerita baru dengan interaksi klik langsung pada peta (*Click Coordinate Picker*).
-
-### 5. 📸 Live Camera Stream Access
-- Integrasi MediaDevices API untuk menangkap foto langsung melalui kamera peramban secara real-time.
-- Manajemen daya dan privasi: *Media stream tracks* dimatikan secara otomatis segera setelah foto berhasil dipotret atau saat pengguna berpindah halaman.
-
-### 6. ♿ Standar Aksesibilitas WCAG & Transisi Halaman
-- Memenuhi standar **Web Content Accessibility Guidelines (WCAG)**:
-  - Fitur navigasi cepat *Skip to main content*.
-  - Kontras warna teks tinggi (*high contrast*).
-  - Navigasi keyboard penuh (`Tab`, `Enter`, `Space`, `Escape`).
-  - Atribut ARIA eksplisit dan deskripsi gambar (`alt text`).
-- **View Transitions API**: Animasi transisi antar halaman SPA yang halus dan ramah performa.
-
----
-
-## 🏗️ Arsitektur Proyek (Model-View-Presenter)
-
-Aplikasi dibangun menggunakan pola arsitektur **Model-View-Presenter (MVP)** murni tanpa framework besar, memastikan pemisahan tanggung jawab (*separation of concerns*) yang jelas, mudah diuji, dan modular:
-
-```text
+```
 src/
 ├── scripts/
-│   ├── config.js              # Konfigurasi aplikasi & default map
-│   ├── index.js               # Entry point, registrasi SW & inisialisasi helper
-│   ├── data/                  # MODEL LAYER
-│   │   ├── api.js             # Definisi endpoint REST API
-│   │   ├── auth-model.js      # Autentikasi sesi & token JWT
-│   │   ├── db.js              # Abstraksi IndexedDB (idb)
-│   │   └── story-model.js     # Logika data cerita & caching
-│   ├── views/                 # VIEW LAYER
-│   │   ├── home-view.js       # Template & manipulasi DOM beranda
-│   │   ├── detail-view.js     # Template detail cerita
-│   │   ├── add-story-view.js  # Template formulir & kamera
-│   │   ├── saved-view.js      # Template cerita tersimpan (offline)
-│   │   └── ...
-│   ├── presenters/            # PRESENTER LAYER
-│   │   ├── home-presenter.js  # Logika interaksi beranda & peta
-│   │   ├── detail-presenter.js# Logika detail & bookmark
-│   │   ├── add-story-presenter.js # Logika kamera, koordinat, & outbox sync
-│   │   ├── saved-presenter.js # Logika pencarian & sorting offline
-│   │   └── ...
-│   ├── routes/                # Client-Side Hash Router
-│   └── utils/                 # Push notification, sync, camera, & transitions
-├── public/                    # Manifest, ikon, Service Worker (sw.js), & redirects
-└── styles/                    # Desain sistem responsif & transisi
+│   ├── config.js              # Application constants & map tile providers
+│   ├── index.js               # Application bootstrap & service worker registration
+│   ├── routes/                # Client-side hash routing & view transitions
+│   ├── views/                 # UI components and view templates
+│   ├── presenters/            # Business logic, state coordination & sync handling
+│   ├── data/                  # Remote API clients & IndexedDB outbox wrappers
+│   └── utils/                 # Camera streaming, notifications & geolocation helpers
+├── public/
+│   ├── app.webmanifest        # PWA manifest with maskable icons & shortcuts
+│   └── sw.js                  # Service Worker with caching & push notification listeners
 ```
 
----
+## Core Capabilities
 
-## 🚀 Menjalankan Secara Lokal (Getting Started)
+### 1. Progressive Web App (PWA) & Offline-First
+- **Installability**: Meets full PWA criteria for standalone homescreen installation across Android, iOS, and desktop browsers.
+- **Service Worker Caching**: Multi-tier caching strategy combining `NetworkFirst` (with cache fallback) and `StaleWhileRevalidate` for offline feed availability.
+- **Web App Manifest**: Configured with maskable vector icons, shortcuts, and responsive screenshots.
 
-### Prasyarat
-- [Node.js](https://nodejs.org/) (versi 18 ke atas disarankan)
-- NPM (bawaan Node.js)
+### 2. IndexedDB Outbox & Background Synchronization
+- **Local Persistence**: Stories can be bookmarked and stored in IndexedDB for instant offline retrieval.
+- **Outbox Queue**: When a user posts a story without internet connectivity, the payload is held in an IndexedDB outbox. Upon network reconnection (`online` event or background sync), the system automatically flushes the queue, uploads content to the API, and notifies the user.
 
-### Langkah Instalasi
-1. Clone repositori ini:
+### 3. Web Push Notifications (VAPID)
+- Standards-compliant Web Push integration supporting VAPID keys.
+- Handles background `push` events and `notificationclick` navigation, routing directly to the target story view via actionable notification buttons.
+
+### 4. Interactive Geospatial Mapping (Leaflet.js)
+- Multi-layer map views (OpenStreetMap, CartoDB Positron, Esri Satellite).
+- Bi-directional viewport synchronization: selecting map pins highlights the corresponding story card, while scrolling stories navigates the map camera.
+- Interactive coordinate picker for attaching geolocation metadata to new posts.
+
+### 5. Hardware Camera Access & Accessibility
+- **MediaDevices Stream**: Direct browser camera capture with automatic stream termination to preserve battery and privacy.
+- **WCAG 2.1 Compliance**: High-contrast typography, skip-to-content anchors, explicit ARIA roles, and complete keyboard navigation (`Tab`, `Enter`, `Escape`).
+- **View Transitions API**: Smooth page transitions between view states.
+
+## Quickstart
+
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+
+### Installation & Development
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/zakski-bit/dicostory.git
    cd dicostory
    ```
-2. Pasang dependensi:
+
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. Jalankan server pengembangan lokal:
+
+3. Start development server:
    ```bash
    npm run dev
    ```
-   Buka peramban Anda di `http://localhost:5173/`.
 
-4. Untuk membuat bundel produksi:
+4. Build for production:
    ```bash
    npm run build
+   npm run preview
    ```
-   Hasil build siap saji akan berada di folder `dist/`.
 
----
+## License
 
-## 🛠️ Teknologi yang Digunakan (Tech Stack)
-
-- **Frontend Core**: Vanilla JavaScript (ES6+ Modules), HTML5 Semantic, CSS3 Custom Properties (Design Tokens)
-- **Bundler & Tooling**: [Vite](https://vitejs.dev/)
-- **PWA & Background Execution**: Service Worker API, Push API, Notifications API, Cache Storage
-- **Offline Storage**: [idb](https://github.com/jakearchibald/idb) (IndexedDB wrapper)
-- **Maps & Geospatial**: [Leaflet.js](https://leafletjs.com/) (OpenStreetMap, CartoDB, Esri Satellite)
-- **Hardware Integration**: MediaDevices API (Camera Stream), Geolocation API
-- **Deployment**: [Netlify](https://www.netlify.com/) / [GitHub Pages](https://pages.github.com/)
-
----
-
-## 📄 Lisensi
-Proyek ini dibuat untuk keperluan portofolio pengembangan web modern dan berada di bawah lisensi [MIT](LICENSE).
+MIT License. See [LICENSE](LICENSE) for details.
